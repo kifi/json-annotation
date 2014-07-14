@@ -30,7 +30,6 @@ If the case class contains 2 fields or more, Play's [JSON macro inception](http:
 This is often more convenient than Play's default format ```{"name": "San Francisco"}```.
 
 #Installation
-*This project hasn't been published yet. This message will be removed once it becomes available*
 
 If you're using Play (version 2.1 or higher) with SBT, you should add the following settings to your build:
 
