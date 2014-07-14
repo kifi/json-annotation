@@ -8,13 +8,21 @@ scalaVersion := "2.11.1"
 
 crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.11.0", "2.11.1")
 
-resolvers += Resolver.sonatypeRepo("releases")
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases"),
+  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
+)
 
 libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 
 libraryDependencies ++= (
   if (scalaVersion.value.startsWith("2.10")) List("org.scalamacros" %% "quasiquotes" % "2.0.1")
   else Nil
+)
+
+libraryDependencies ++= Seq(
+  "com.typesafe.play" %% "play-json" % "2.3.1" % Test,
+  "org.specs2" %% "specs2" % "2.3.13" % Test
 )
 
 unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile, scalaBinaryVersion){
