@@ -6,6 +6,9 @@ import scala.annotation.StaticAnnotation
 
 import CrossVersionDefs._
 
+object jsonMacroInstance extends jsonMacro(false)
+object jsonStrictMacroInstance extends jsonMacro(true)
+
 /**
  * "@json" macro annotation for case classes
  *
@@ -21,10 +24,24 @@ import CrossVersionDefs._
  * then A(4) will be serialized as '4' instead of '{"value": 4}'.
  */
 class json extends StaticAnnotation {
-  def macroTransform(annottees: Any*): Any = macro jsonMacro.impl
+  def macroTransform(annottees: Any*): Any = macro jsonMacroInstance.impl
 }
 
-object jsonMacro {
+/**
+ * "@jsonstrict" macro annotation for case classes
+ *
+ * Same as "@json" annotation, except that it always uses the default Play formatter.
+ * For example, if A is defined as:
+ *
+ *     case class A(value: Int)
+ *
+ * then A(4) will be serialized as '{"value": 4}'.
+ */
+class jsonstrict extends StaticAnnotation {
+  def macroTransform(annottees: Any*): Any = macro jsonStrictMacroInstance.impl
+}
+
+class jsonMacro(isStrict: Boolean) {
   def impl(c: CrossVersionContext)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
@@ -40,8 +57,8 @@ object jsonMacro {
     def jsonFormatter(className: TypeName, fields: List[ValDef]) = {
       fields.length match {
         case 0 => c.abort(c.enclosingPosition, "Cannot create json formatter for case class with no fields")
-        case 1 =>
-          // Only one field, use the serializer for the field
+        case 1 if !isStrict => {
+          // use the serializer for the field
           q"""
             implicit val jsonAnnotationFormat = {
               import play.api.libs.json._
@@ -51,9 +68,11 @@ object jsonMacro {
               )
             }
           """
-        case _ =>
-          // More than one field, use Play's macro
+        }
+        case _ => {
+          // use Play's macro
           q"implicit val jsonAnnotationFormat = play.api.libs.json.Json.format[$className]"
+        }
       }
     }
 
