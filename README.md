@@ -37,7 +37,7 @@ If you're using Play (version 2.1 or higher) with SBT, you should add the follow
 
 ```scala
 
-libraryDependencies += "com.kifi" %% "json-annotation" % "0.1"
+libraryDependencies += "com.kifi" %% "json-annotation" % "0.2"
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full)
 ```
