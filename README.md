@@ -29,6 +29,8 @@ If the case class contains 2 fields or more, Play's [JSON macro inception](http:
 
 This is often more convenient than Play's default format ```{"name": "San Francisco"}```.
 
+If you would rather stick to Play's default format even for single field case classes, you can use ```@jsonstrict``` instead of ```@json```.
+
 #Installation
 
 If you're using Play (version 2.1 or higher) with SBT, you should add the following settings to your build:
