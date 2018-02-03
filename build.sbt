@@ -2,7 +2,7 @@ organization := "com.kifi"
 
 name := "json-annotation"
 
-version := "0.2"
+version := "0.3.1"
 
 scalaVersion := "2.12.4"
 
